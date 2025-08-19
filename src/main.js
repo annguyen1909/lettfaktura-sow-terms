@@ -247,7 +247,7 @@ function loadTermsContent(languageCode) {
   // Fetch terms content - use different endpoints for local vs production
   var termsEndpoint = window.location.hostname === 'localhost' 
     ? API_BASE_URL + "/locals/terms/" + languageCode
-    : API_BASE_URL + "/terms/" + languageCode;
+    : API_BASE_URL + "/terms-direct/" + languageCode;
     
   fetch(termsEndpoint)
     .then(function (response) {
