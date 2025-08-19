@@ -1,5 +1,7 @@
-// Configuration
-var API_BASE_URL = "http://localhost:3000/api/v1";
+// Configuration - Use local server in development, relative paths in production
+var API_BASE_URL = window.location.hostname === 'localhost' 
+  ? "http://localhost:3000/api/v1" 
+  : "/api";
 
 // Initialize the page when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
@@ -242,8 +244,12 @@ function loadTermsContent(languageCode) {
   termsContainer.innerHTML =
     '<p class="loading-message">Loading terms content...</p>';
 
-  // Fetch terms content
-  fetch(API_BASE_URL + "/locals/terms/" + languageCode)
+  // Fetch terms content - use different endpoints for local vs production
+  var termsEndpoint = window.location.hostname === 'localhost' 
+    ? API_BASE_URL + "/locals/terms/" + languageCode
+    : API_BASE_URL + "/terms/" + languageCode;
+    
+  fetch(termsEndpoint)
     .then(function (response) {
       if (!response.ok) {
         throw new Error("Terms API error: " + response.status);

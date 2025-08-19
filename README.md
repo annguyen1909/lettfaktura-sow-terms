@@ -2,15 +2,6 @@
 
 A modern, responsive terms of service page built with Vite, featuring multilingual support and database-driven content.
 
-## 🚀 Features
-
-- **Modern Frontend**: Built with Vite for fast development and optimized builds
-- **Multilingual Support**: Swedish and English language switching
-- **Database-Driven Content**: PostgreSQL backend with real terms content
-- **Responsive Design**: Works seamlessly on desktop and mobile devices
-- **API Integration**: RESTful API for configuration and content management
-- **Error Handling**: Graceful fallbacks when API is unavailable
-
 ## 🏗️ Project Structure
 
 ```
@@ -72,113 +63,54 @@ psql -d your_database -f database/update_terms_content.sql
 ```bash
 # Frontend environment (already created)
 # Edit .env if needed for different API URL
-VITE_API_URL=http://localhost:3000/api/v1
-VITE_DEFAULT_LANGUAGE=se
-```
 
-## 🚦 Running the Application
+# Lettfaktura SOW Terms
 
-### Development Mode
-```bash
-# Run both frontend and backend together
-npm start
+## Project Overview
+This project is a simple multilingual terms and conditions web app for Lettfaktura, built with a modern frontend stack and a lightweight backend. It supports language switching (Swedish/English) and is styled for both desktop and mobile.
 
-# Or run them separately:
-npm run dev          # Frontend only (Vite dev server)
-npm run api:dev      # Backend only (Express server)
-```
+## Tech Stack & Details
 
-### Production Build
-```bash
-# Build frontend for production
-npm run build
+- **Frontend:**
+  - Vanilla JavaScript (ES6+)
+  - HTML5
+  - CSS3 (custom, no frameworks)
+  - Vite (for fast development and build)
+- **Backend:**
+  - Fastify (Node.js web server)
+  - Sequelize (ORM for database, if used)
+- **Node.js Version:** 18.x or newer recommended
+- **No React or frontend frameworks used**
+- **No CSS frameworks (like Tailwind, Bootstrap) used**
+- **No icons or icon libraries included**
 
-# Preview production build
-npm run preview
+## Key Features
+- Language selector (Swedish/English)
+- Responsive navigation bar
+- Terms content loaded dynamically
+- Mobile and desktop support
 
-# Run production API
-npm run api
-```
+## How to Deploy to Vercel (Frontend + Backend)
+1. Push your code to a GitHub (or GitLab/Bitbucket) repository
+2. Go to https://vercel.com/ and sign in
+3. Click **New Project** and import your repository
+4. Vercel will auto-detect Vite and Node.js settings
+5. Set the build command to `npm run build` (or just leave as default)
+6. Set the output directory to `dist`
+7. Add environment variables if you use a database:
+   - `DATABASE_URL` (your PostgreSQL connection string)
+   - Any other environment variables from your `.env` file
+8. Click **Deploy**
+9. Your site will be live with both frontend and API at the Vercel URL
 
-## 🌐 API Endpoints
+**Backend API Endpoints (Serverless Functions):**
+- `/api/health` - Health check
+- `/api/config` - Site configuration and navigation
+- `/api/terms/[languageCode]` - Terms content (se or en)
 
-### Configuration
-- `GET /api/v1/config` - Site configuration, navigation, and languages
+**Note:**
+- The backend runs as Vercel Serverless Functions
+- Database connections are handled automatically
+- Each API call creates a new serverless instance
 
-### Terms Content
-- `GET /api/v1/locals/terms/:languageCode` - Terms content for specific language
-  - `:languageCode` - `se` for Swedish, `en` for English
 
-## 🗄️ Database Schema
-
-### Tables
-- **languages** - Available languages (Swedish, English)
-- **site_config** - Site configuration (title, logo, background)
-- **navigation_items** - Navigation menu structure
-- **navigation_translations** - Multilingual navigation labels
-- **terms_content** - Terms of service content in multiple languages
-
-### Content Fields
-The terms content includes 24 text fields (`terms_text_1` through `terms_text_24`) plus a Swedish-specific field (`terms_text_10_se`) for detailed terms coverage.
-
-## 🎨 Styling & Responsive Design
-
-- **CSS Variables**: Consistent theming throughout the application
-- **Flexbox Layout**: Modern, flexible layout system
-- **Mobile-First**: Responsive design that works on all screen sizes
-- **Loading States**: Smooth loading indicators for better UX
-
-## 🌍 Language Support
-
-### Supported Languages
-- **Swedish (se)**: Default language with complete terms content
-- **English (en)**: Full English translation of all terms
-
-### Adding New Languages
-1. Add language entry to `languages` table
-2. Create translations in `navigation_translations` table
-3. Add terms content to `terms_content` table
-4. Update frontend language selector
-
-## 🔧 Development
-
-### Hot Reload
-Vite provides instant hot module replacement during development for a smooth developer experience.
-
-### API Proxy
-Development server automatically proxies `/api` requests to the Express backend running on port 3000.
-
-### Error Handling
-- Graceful API failure handling with fallback content
-- User-friendly error messages
-- Automatic retry mechanisms
-
-## 📦 Building for Production
-
-### Frontend
-```bash
-npm run build
-```
-Generates optimized static files in the `dist/` directory.
-
-### Backend
-The Express server can be deployed to any Node.js hosting platform. Make sure to:
-1. Set up your production database
-2. Configure environment variables
-3. Run the database schema
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## 📄 License
-
-This project is part of the 123 Fakturera application suite.
-
----
-
-**Built with ❤️ using Vite + Express.js + PostgreSQL**
