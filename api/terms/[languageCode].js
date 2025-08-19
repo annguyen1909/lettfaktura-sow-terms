@@ -120,67 +120,92 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  console.log('=== Serverless Function Debug ===');
+  console.log('Request URL:', req.url);
+  console.log('Query params:', req.query);
+
   try {
     const { languageCode } = req.query;
     
-    console.log('Environment check:', {
-      hasHost: !!process.env.DB_HOST,
-      hasUser: !!process.env.DB_USER,
-      hasPassword: !!process.env.DB_PASSWORD,
-      hasName: !!process.env.DB_NAME
+    console.log('Environment variables check:', {
+      DB_HOST: process.env.DB_HOST ? 'SET' : 'MISSING',
+      DB_USER: process.env.DB_USER ? 'SET' : 'MISSING', 
+      DB_PASSWORD: process.env.DB_PASSWORD ? 'SET' : 'MISSING',
+      DB_NAME: process.env.DB_NAME ? 'SET' : 'MISSING',
+      DB_PORT: process.env.DB_PORT || 'NOT SET',
+      DB_SSL: process.env.DB_SSL || 'NOT SET'
     });
     
     // Only allow Swedish and English
     if (!['se', 'en'].includes(languageCode?.toLowerCase())) {
+      console.log('Invalid language code:', languageCode);
       return res.status(400).json({ 
         error: 'Only Swedish (se) and English (en) languages are supported' 
       });
     }
 
-    // Try to initialize and use database
-    const dbInitialized = await initDatabase();
-    
-    if (dbInitialized && TermsContent && testConnection) {
-      try {
-        await testConnection();
-        console.log('Database connected, querying for language:', languageCode);
-        
-        const termsContent = await TermsContent.findOne({
-          where: {
-            language_code: languageCode.toLowerCase()
-          }
-        });
+    console.log('Processing language:', languageCode);
 
-        if (termsContent) {
-          console.log('Database data found for', languageCode);
-          // Format response to match frontend expectations
-          const response = {
-            heading: termsContent.heading,
-            close_button_text: termsContent.close_button_text
-          };
+    // Check if we have database credentials
+    const hasDbCredentials = process.env.DB_HOST && process.env.DB_USER && process.env.DB_PASSWORD && process.env.DB_NAME;
+    console.log('Has database credentials:', hasDbCredentials);
 
-          // Add all terms_text fields that have content
-          for (let i = 1; i <= 24; i++) {
-            const fieldName = `terms_text_${i}`;
-            const seFieldName = `terms_text_${i}_se`;
-            
-            // For Swedish, check if there's a special SE field first
-            if (languageCode.toLowerCase() === 'se' && termsContent[seFieldName]) {
-              response[seFieldName] = termsContent[seFieldName];
-            } else if (termsContent[fieldName]) {
-              response[fieldName] = termsContent[fieldName];
+    if (hasDbCredentials) {
+      console.log('Attempting database connection...');
+      
+      // Try to initialize and use database
+      const dbInitialized = await initDatabase();
+      console.log('Database initialized:', dbInitialized);
+      
+      if (dbInitialized && TermsContent && testConnection) {
+        try {
+          console.log('Testing database connection...');
+          await testConnection();
+          console.log('Database connected successfully, querying for language:', languageCode);
+          
+          const termsContent = await TermsContent.findOne({
+            where: {
+              language_code: languageCode.toLowerCase()
             }
-          }
+          });
 
-          return res.status(200).json(response);
-        } else {
-          console.log('No database data found for', languageCode, 'using fallback');
+          console.log('Database query result:', !!termsContent);
+
+          if (termsContent) {
+            console.log('Database data found for', languageCode);
+            // Format response to match frontend expectations
+            const response = {
+              heading: termsContent.heading,
+              close_button_text: termsContent.close_button_text
+            };
+
+            // Add all terms_text fields that have content
+            for (let i = 1; i <= 24; i++) {
+              const fieldName = `terms_text_${i}`;
+              const seFieldName = `terms_text_${i}_se`;
+              
+              // For Swedish, check if there's a special SE field first
+              if (languageCode.toLowerCase() === 'se' && termsContent[seFieldName]) {
+                response[seFieldName] = termsContent[seFieldName];
+              } else if (termsContent[fieldName]) {
+                response[fieldName] = termsContent[fieldName];
+              }
+            }
+
+            console.log('Returning database data');
+            return res.status(200).json(response);
+          } else {
+            console.log('No database data found for', languageCode, 'using fallback');
+          }
+        } catch (dbError) {
+          console.log('Database query error:', dbError.message);
+          console.log('Full error:', dbError);
         }
-      } catch (dbError) {
-        console.log('Database query error:', dbError.message);
+      } else {
+        console.log('Database not initialized properly');
       }
     } else {
-      console.log('Database not initialized, using fallback');
+      console.log('Missing database credentials, using fallback');
     }
 
     // Fallback to static data
@@ -188,11 +213,13 @@ export default async function handler(req, res) {
     const termsData = fallbackTermsData[languageCode.toLowerCase()];
     
     if (!termsData) {
+      console.log('No fallback data found for', languageCode);
       return res.status(404).json({ 
         error: `Terms content not found for language: ${languageCode}` 
       });
     }
 
+    console.log('Returning fallback data');
     return res.status(200).json(termsData);
   } catch (error) {
     console.error('Terms content error:', error);
