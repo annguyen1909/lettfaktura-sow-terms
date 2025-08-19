@@ -1,35 +1,12 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>123 Fakturer</title>
+    <title>123 Fakturera Terms</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://storage.123fakturera.se/public/icons/diamond.png">
+    <link rel="apple-touch-icon" href="https://storage.123fakturera.se/public/icons/diamond.png">
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Create the elements for favicon and webclip
-        let faviconLink = document.createElement("link");
-        faviconLink.rel = "shortcut icon";
-        faviconLink.type = "image/x-icon";
-        let webclipLink = document.createElement("link");
-        webclipLink.rel = "apple-touch-icon";
-
-        // Detect URL and set the appropriate href values
-        if (window.location.href.includes(".no")) {
-          document.title = "123 Fakturere"; // Set title
-          faviconLink.href =
-            "https://storage.123fakturere.no/public/favicon/shortcut.jpg"; // Set favicon
-          webclipLink.href =
-            "https://storage.123fakturere.no/public/favicon/webclip.JPG"; // Set webclip
-        } else if (window.location.href.includes(".se")) {
-          document.title = "123 Fakturera"; // Set title
-          faviconLink.href =
-            "https://storage.123fakturera.se/public/favicon/shortcut.jpg"; // Set favicon
-          webclipLink.href =
-            "https://storage.123fakturera.se/public/favicon/webclip.JPG"; // Set webclip
-        }
-
-        // Append the links to the head of the document
-        document.head.appendChild(faviconLink);
-        document.head.appendChild(webclipLink);
-      });
+      // Title and favicon are now set statically above
+      // This script can be simplified or removed
     </script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
