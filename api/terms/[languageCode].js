@@ -1,13 +1,90 @@
-// Database models (will try to use if environment variables are set)
-let TermsContent, testConnection;
+// Try to load database models - with better error handling
+let TermsContent, testConnection, sequelize;
 
-try {
-  const models = require('../models');
-  TermsContent = models.TermsContent;
-  testConnection = models.testConnection;
-} catch (error) {
-  console.log('Database models not available, using fallback data');
-}
+const initDatabase = async () => {
+  try {
+    // Manual Sequelize setup for serverless
+    const { Sequelize } = require('sequelize');
+    
+    sequelize = new Sequelize({
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT || 5432,
+      database: process.env.DB_NAME,
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      dialect: 'postgres',
+      ssl: process.env.DB_SSL === 'true',
+      dialectOptions: {
+        ssl: process.env.DB_SSL === 'true' ? {
+          require: true,
+          rejectUnauthorized: false
+        } : false
+      },
+      logging: false
+    });
+
+    // Define TermsContent model directly
+    TermsContent = sequelize.define('TermsContent', {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
+      language_code: {
+        type: Sequelize.STRING(2),
+        allowNull: false
+      },
+      heading: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      close_button_text: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      terms_text_1: Sequelize.TEXT,
+      terms_text_2: Sequelize.TEXT,
+      terms_text_3: Sequelize.TEXT,
+      terms_text_4: Sequelize.TEXT,
+      terms_text_5: Sequelize.TEXT,
+      terms_text_6: Sequelize.TEXT,
+      terms_text_7: Sequelize.TEXT,
+      terms_text_8: Sequelize.TEXT,
+      terms_text_9: Sequelize.TEXT,
+      terms_text_10: Sequelize.TEXT,
+      terms_text_10_se: Sequelize.TEXT,
+      terms_text_11: Sequelize.TEXT,
+      terms_text_12: Sequelize.TEXT,
+      terms_text_13: Sequelize.TEXT,
+      terms_text_14: Sequelize.TEXT,
+      terms_text_15: Sequelize.TEXT,
+      terms_text_16: Sequelize.TEXT,
+      terms_text_17: Sequelize.TEXT,
+      terms_text_18: Sequelize.TEXT,
+      terms_text_19: Sequelize.TEXT,
+      terms_text_20: Sequelize.TEXT,
+      terms_text_21: Sequelize.TEXT,
+      terms_text_22: Sequelize.TEXT,
+      terms_text_23: Sequelize.TEXT,
+      terms_text_24: Sequelize.TEXT
+    }, {
+      tableName: 'terms_content',
+      timestamps: false
+    });
+
+    testConnection = async () => {
+      await sequelize.authenticate();
+      console.log('✅ Database connection established');
+    };
+
+    return true;
+  } catch (error) {
+    console.log('Database initialization failed:', error.message);
+    return false;
+  }
+};
+
+// Fallback data for when database is not available
 const fallbackTermsData = {
   se: {
     heading: "Villkor",
@@ -46,6 +123,13 @@ export default async function handler(req, res) {
   try {
     const { languageCode } = req.query;
     
+    console.log('Environment check:', {
+      hasHost: !!process.env.DB_HOST,
+      hasUser: !!process.env.DB_USER,
+      hasPassword: !!process.env.DB_PASSWORD,
+      hasName: !!process.env.DB_NAME
+    });
+    
     // Only allow Swedish and English
     if (!['se', 'en'].includes(languageCode?.toLowerCase())) {
       return res.status(400).json({ 
@@ -53,10 +137,13 @@ export default async function handler(req, res) {
       });
     }
 
-    // Try to load from database first
-    if (TermsContent && testConnection) {
+    // Try to initialize and use database
+    const dbInitialized = await initDatabase();
+    
+    if (dbInitialized && TermsContent && testConnection) {
       try {
         await testConnection();
+        console.log('Database connected, querying for language:', languageCode);
         
         const termsContent = await TermsContent.findOne({
           where: {
@@ -65,6 +152,7 @@ export default async function handler(req, res) {
         });
 
         if (termsContent) {
+          console.log('Database data found for', languageCode);
           // Format response to match frontend expectations
           const response = {
             heading: termsContent.heading,
@@ -85,13 +173,18 @@ export default async function handler(req, res) {
           }
 
           return res.status(200).json(response);
+        } else {
+          console.log('No database data found for', languageCode, 'using fallback');
         }
       } catch (dbError) {
-        console.log('Database error, falling back to static data:', dbError.message);
+        console.log('Database query error:', dbError.message);
       }
+    } else {
+      console.log('Database not initialized, using fallback');
     }
 
     // Fallback to static data
+    console.log('Using fallback data for', languageCode);
     const termsData = fallbackTermsData[languageCode.toLowerCase()];
     
     if (!termsData) {
