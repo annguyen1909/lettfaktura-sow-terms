@@ -93,3 +93,6 @@ var Utils = {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 };
+
+// Export for ES modules
+window.Utils = Utils;
