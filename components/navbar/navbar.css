@@ -13,7 +13,7 @@
 }
 
 header.navigation-header {
-    background-color: none;
+  background-color: none;
 }
 
 .navigation-section {
@@ -38,6 +38,10 @@ header.navigation-header {
 
 .lang-dropk {
   display: none;
+}
+
+.lang-drop {
+  display: block;
 }
 
 a {
@@ -90,15 +94,6 @@ a {
 .language-pc-menu-items {
   padding-left: 1.5rem !important;
   position: relative;
-}
-
-.language-pc-menu-items .dropdownList {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 0.5rem;
-  z-index: 1000;
-  min-width: 150px;
 }
 
 .language-title-box {
@@ -175,10 +170,8 @@ a {
 .dropdownList {
   display: none;
   font-weight: 500;
-  /* width: max-content; */
   background: #fff;
   color: rgba(0, 0, 0, 0.9);
-  /* color: #000; */
   font-size: 15px;
   position: absolute;
   right: -13px;
@@ -189,15 +182,14 @@ a {
   padding-left: 0.25rem;
   padding-right: 0.25rem;
   border-radius: 0.5rem;
-  margin-top: 0.5rem;
+  margin-top: 1.5rem;
   opacity: 1;
-  --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  --tw-shadow-colored: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  box-shadow:
-    0 10px 15px -3px rgba(17, 17, 17, 0.7),
+  box-shadow: 0 10px 15px -3px rgba(17, 17, 17, 0.7),
     0 4px 6px -4px rgba(34, 34, 34, 0.7);
+}
+
+.dropdownList.show {
+  display: block !important;
 }
 
 .drop-down-element {
@@ -251,14 +243,18 @@ a {
   top: 0px;
   /* display: none; */
   left: 0rem;
-  transition:
-    height 0.3s ease-in-out,
-    opacity 0.3s ease-in-out,
+  transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out,
     width 0.3s ease-in-out;
   position: absolute;
 }
 
 @media (max-width: 1269px) {
+  .lang-drop {
+    display: none !important;
+  }
+  .lang-dropk {
+    display: block !important;
+  }
   .menu-drop-down {
     overflow: hidden;
     width: 19rem;
@@ -268,30 +264,31 @@ a {
     /* --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
         box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow); */
-    box-shadow:
-      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
       0 4px 6px -4px rgba(0, 0, 0, 0.1);
   }
   .logoa,
-  .pc-menu,
-  .lang-drop {
+  .pc-menu {
     display: none;
   }
   .open-menu-dds {
     display: block;
   }
-  .lang-dropk {
-    display: block;
-  }
 }
 
 @media (min-width: 1270px) {
+  .lang-drop {
+    display: block !important;
+  }
+  .lang-dropk {
+    display: none !important;
+  }
   .menu-drop-down {
     display: none;
   }
   .dropdownList {
-    right: 2px;
-    margin-top: 1rem;
+    right: -12px;
+    margin-top: 1.5rem;
   }
 }
 
@@ -345,7 +342,7 @@ a {
 }
 
 .flag-icon {
-  margin-left: 1rem;
+  margin-left: 0.5rem;
   margin-top: -5px;
 }
 

@@ -149,7 +149,6 @@ function populateNavigation(navItems) {
 
 var currentLanguageCode = 'se'; // Default to Swedish
 
-
 function populateLanguages(languages) {
   var languageContainer = document.querySelector(".dropdownList");
   var langDropContainer = document.querySelector(".lang-drop-container");
@@ -158,11 +157,11 @@ function populateLanguages(languages) {
   // Find the current language object
   var currentLang = languages.find(l => l.code === currentLanguageCode) || languages[0];
 
-  // Update the main language display (clickable to toggle dropdown)
+  // Update the main language display - but preserve the dropdownList
   if (langDropContainer) {
     langDropContainer.innerHTML =
       '<div class="language-pc-menu-items">' +
-      '<div class="language-title-box" id="lang-title-box" style="cursor:pointer;">' +
+      '<div class="language-title-box">' +
       '<span class="language-name">' +
       currentLang.name +
       "</span>" +
@@ -171,30 +170,20 @@ function populateLanguages(languages) {
       '" class="flag-icon" alt="' +
       currentLang.name +
       '" />' +
-      '</div>' +
-      '</div>';
-    // Add click event to toggle dropdown
-    var titleBox = langDropContainer.querySelector('#lang-title-box');
-    if (titleBox) {
-      titleBox.onclick = function(e) {
-        e.stopPropagation();
-        if (languageContainer.style.display === 'block') {
-          languageContainer.style.display = 'none';
-        } else {
-          languageContainer.style.display = 'block';
-        }
-      };
-    }
+      "</div>" +
+      "</div>" +
+      '<div class="dropdownList"></div>';
+      
+    // Get the new dropdown container
+    languageContainer = document.querySelector(".dropdownList");
   }
 
   // Clear dropdown
   languageContainer.innerHTML = "";
-  languageContainer.style.display = 'none'; // Always start hidden
 
-  // Only show other languages in the dropdown
+  // Create dropdown options
   for (var i = 0; i < languages.length; i++) {
     var lang = languages[i];
-    if (lang.code === currentLanguageCode) continue;
     var langItem = document.createElement("div");
     langItem.className = "language-item drop-down-element";
     langItem.setAttribute("data-language", lang.code);
@@ -214,10 +203,26 @@ function populateLanguages(languages) {
     langItem.addEventListener("click", (function(language) {
       return function() {
         currentLanguageCode = language.code;
-        populateLanguages(languages); // re-render main display and dropdown
+        // Update the main display
+        var titleBox = document.querySelector(".language-title-box");
+        if (titleBox) {
+          titleBox.innerHTML =
+            '<span class="language-name">' +
+            language.name +
+            "</span>" +
+            '<img src="' +
+            language.flag_url +
+            '" class="flag-icon" alt="' +
+            language.name +
+            '" />';
+        }
+        // Load terms for selected language
         loadTermsContent(language.code);
+        // Update navigation for selected language (fallback only)
+        populateNavigationFallback();
         // Close dropdown
-        languageContainer.style.display = 'none';
+        var dropdown = document.querySelector('.dropdownList');
+        if (dropdown) dropdown.style.display = 'none';
       };
     })(lang));
 
@@ -304,15 +309,24 @@ function switchLanguage(languageCode) {
 
 // Fallback functions - these work without API
 function populateNavigationFallback() {
-  var defaultNavItems = [
-    { title: "Hem", url: "/" },
-    { title: "Beställ", url: "/pricing" },
-    { title: "Våra Kunder", url: "/features" },
-    { title: "Om oss", url: "/support" },
-    { title: "Kontakta oss", url: "/login" },
-  ];
-
-  populateNavigation(defaultNavItems);
+  var navItemsByLang = {
+    se: [
+      { title: "Hem", url: "/" },
+      { title: "Beställ", url: "/pricing" },
+      { title: "Våra Kunder", url: "/features" },
+      { title: "Om oss", url: "/support" },
+      { title: "Kontakta oss", url: "/login" },
+    ],
+    en: [
+      { title: "Home", url: "/" },
+      { title: "Order", url: "/" },
+      { title: "Our Customers", url: "/" },
+      { title: "About Us", url: "/" },
+      { title: "Contact Us", url: "/" },
+    ]
+  };
+  var items = navItemsByLang[currentLanguageCode] || navItemsByLang.se;
+  populateNavigation(items);
 }
 
 function populateLanguagesFallback() {
@@ -345,7 +359,7 @@ function loadTermsContentFallback(languageCode) {
         "Här hittar ni våra villkor för 123 Fakturera. Vi arbetar för att ge er den bästa faktureringslösningen på marknaden.",
     },
     en: {
-      heading: "Terms of Service",
+      heading: "Terms",
       closeButton: "Close",
       content:
         "Here you can find our terms of service for 123 Fakturera. We work to provide you with the best invoicing solution on the market.",
