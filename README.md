@@ -66,14 +66,11 @@ This project is a simple multilingual terms and conditions web app for Lettfaktu
 - Terms content loaded dynamically
 - Mobile and desktop support
 
-**Backend API Endpoints (Serverless Functions):**
-- `/api/health` - Health check
-- `/api/config` - Site configuration and navigation
-- `/api/terms/[languageCode]` - Terms content (se or en)
-
-**Note:**
-- The backend runs as Vercel Serverless Functions
-- Database connections are handled automatically
-- Each API call creates a new serverless instance
+## How to Run Locally
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Start the dev server: `npm run dev`
+4. Open another terminal and run the server.js: `node api/server.js`
+5. Open your browser at `http://localhost:5173` 
 
 
