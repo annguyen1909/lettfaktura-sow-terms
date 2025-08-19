@@ -2,30 +2,6 @@
 
 A modern, responsive terms of service page built with Vite, featuring multilingual support and database-driven content.
 
-## 🏗️ Project Structure
-
-```
-lettfaktura-sow-terms/
-├── src/                    # Vite frontend source
-│   ├── main.js            # Application entry point
-│   ├── terms.js           # Terms page functionality
-│   └── style.css          # Main styles
-├── components/            # Reusable components
-│   ├── navbar/           # Navigation component
-│   │   └── navbar.css    # Navigation styles
-│   └── utils.js          # Utility functions
-├── api/                   # Express.js backend
-│   ├── server.js         # API server
-│   ├── package.json      # Backend dependencies
-│   └── .env              # Database configuration
-├── database/             # Database files
-│   ├── schema.sql        # Complete database schema
-│   └── update_terms_content.sql  # Content update script
-├── public/               # Static assets
-├── dist/                 # Built files (generated)
-└── package.json          # Frontend dependencies
-```
-
 ## 🛠️ Setup & Installation
 
 ### Prerequisites
