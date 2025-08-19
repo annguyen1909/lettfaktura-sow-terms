@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>123 Fakturer</title>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Create the elements for favicon and webclip
+        let faviconLink = document.createElement("link");
+        faviconLink.rel = "shortcut icon";
+        faviconLink.type = "image/x-icon";
+        let webclipLink = document.createElement("link");
+        webclipLink.rel = "apple-touch-icon";
+
+        // Detect URL and set the appropriate href values
+        if (window.location.href.includes(".no")) {
+          document.title = "123 Fakturere"; // Set title
+          faviconLink.href =
+            "https://storage.123fakturere.no/public/favicon/shortcut.jpg"; // Set favicon
+          webclipLink.href =
+            "https://storage.123fakturere.no/public/favicon/webclip.JPG"; // Set webclip
+        } else if (window.location.href.includes(".se")) {
+          document.title = "123 Fakturera"; // Set title
+          faviconLink.href =
+            "https://storage.123fakturera.se/public/favicon/shortcut.jpg"; // Set favicon
+          webclipLink.href =
+            "https://storage.123fakturera.se/public/favicon/webclip.JPG"; // Set webclip
+        }
+
+        // Append the links to the head of the document
+        document.head.appendChild(faviconLink);
+        document.head.appendChild(webclipLink);
+      });
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/components/navbar/navbar.css" />
+    <link rel="stylesheet" href="/terms/terms.css" />
+    <link rel="stylesheet" href="/global.css" />
+  </head>
+
+  <body>
+    <main>
+      <div class="terms-container">
+        <div class="background-container">
+          <img src="" alt="" id="background-image" />
+        </div>
+        <nav class="navigation-out">
+          <header class="navigation-header">
+            <section class="navigation-section">
+              <div class="logoa">
+                <a href="/"><img alt="123 Fakturera" class="navigation-logo" src="https://storage.123fakturera.se/public/icons/diamond.png" /></a>
+              </div>
+              <div class="open-menu-dds">
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  class="navigation-svg"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"></path>
+                </svg>
+              </div>
+              <div class="navigation-menu-bar">
+                <div class="menu-drop-down">
+                  <div class="menu-drop-down-container">
+                    <!-- Mobile menu items will be populated by JavaScript -->
+                  </div>
+                </div>
+                <div class="pc-menu">
+                  <!-- Desktop menu items will be populated by JavaScript -->
+                </div>
+                <div class="lang-drop">
+                  <div class="lang-drop-container">
+                    <div class="dropdownList">
+                      <!-- Language options will be populated by JavaScript -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </header>
+        </nav>
+        <div class="content hidden__display">
+          <section class="terms-section">
+            <div class="terms-top-text">
+              <h1 class="terms-heading"></h1>
+              <button
+                class="go-back-button"
+                onclick="window.close('', '_self', '');history.back()"
+              ></button>
+            </div>
+            <div class="back-terms">
+              <!-- Terms paragraphs will be loaded here -->
+              <div id="terms-paragraphs">
+                <p class="loading-message">Loading terms content...</p>
+              </div>
+            </div>
+            <div class="terms-top-text">
+              <button
+                class="go-back-button lower-back-button"
+                onclick="window.close('', '_self', '');history.back()"
+              ></button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <script src="/components/utils.js"></script>
+    <script src="/src/main.js"></script>
+  </body>
+</html>
