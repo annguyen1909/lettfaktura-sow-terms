@@ -66,19 +66,6 @@ This project is a simple multilingual terms and conditions web app for Lettfaktu
 - Terms content loaded dynamically
 - Mobile and desktop support
 
-## How to Deploy to Vercel (Frontend + Backend)
-1. Push your code to a GitHub (or GitLab/Bitbucket) repository
-2. Go to https://vercel.com/ and sign in
-3. Click **New Project** and import your repository
-4. Vercel will auto-detect Vite and Node.js settings
-5. Set the build command to `npm run build` (or just leave as default)
-6. Set the output directory to `dist`
-7. Add environment variables if you use a database:
-   - `DATABASE_URL` (your PostgreSQL connection string)
-   - Any other environment variables from your `.env` file
-8. Click **Deploy**
-9. Your site will be live with both frontend and API at the Vercel URL
-
 **Backend API Endpoints (Serverless Functions):**
 - `/api/health` - Health check
 - `/api/config` - Site configuration and navigation
